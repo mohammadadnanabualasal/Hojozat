@@ -1,0 +1,24 @@
+.profile-img-rounded-circle{
+    border-radius: 50% !important;
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+}
+.header{
+    background-color: whitesmoke;
+    height: 70px;
+}
+
+.right-alignment{
+    justify-content: right;
+    display: flex;
+}
+
+.center-alignment{
+    justify-content: center;
+    display: flex;
+}
+.footer{
+    margin-top: 200px;
+    height: 150px;
+}

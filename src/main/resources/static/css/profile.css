@@ -1,0 +1,17 @@
+.text-center {
+    text-align: center !important;
+}
+.image-center{
+    margin: auto;
+    padding-bottom: 50px;
+}
+.rounded-circle {
+    border-radius: 50% !important;
+    object-fit: cover;
+}
+
+.container-shadow{
+    border: 1px solid gray;
+    min-height: 300px;
+    margin-top: 20px;
+}
