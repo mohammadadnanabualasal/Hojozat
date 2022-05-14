@@ -22,7 +22,7 @@
                                 </h5>
                                 <div class="card-img justify-content-center">
                                     <img class="card-restaurant-img"
-                                         src="https://media.timeout.com/images/105846896/750/422/image.jpg"/>
+                                         src="/restaurantImage/${restaurant.id}"/>
                                 </div>
                                 <div class="card-footer">
                                     <div class="col-md-12 left-alignment">

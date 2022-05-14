@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ public class RestaurantController {
         RestaurantEntity restaurant = RestaurantEntity.getRestaurantById(id);
         ModelAndView modelAndView = new ModelAndView("restaurant");
         modelAndView.addObject("dishesList", restaurant.getAllDishesForRestaurant());
+        modelAndView.addObject("servingHoursList", restaurant.getServingHours());
         modelAndView.addObject("timeError", timeError);
         session.setAttribute("requestedRestaurant", restaurant);
         return modelAndView;
@@ -50,7 +52,7 @@ public class RestaurantController {
             RestaurantEntity restaurant = (RestaurantEntity) session.getAttribute("restaurantUser");
             ModelAndView modelAndView = new ModelAndView("myRestaurant");
             try {
-                if (fromTime>toTime){
+                if (fromTime > toTime) {
                     return modelAndView;
                 }
                 restaurant.setServingFromTime(Time.valueOf(fromTime + ":00:00"));
@@ -147,18 +149,26 @@ public class RestaurantController {
             , @RequestParam(value = "orderFoodOnline", defaultValue = "false") boolean orderFoodOnline) {
         ModelAndView modelAndView = new ModelAndView("redirect:/restaurant/" + restaurantId);
         if (session.getAttribute("user") != null) {
-            ReservationEntity reservationEntity = new ReservationEntity();
-            reservationEntity.setRestaurantId(Integer.parseInt(restaurantId));
-            reservationEntity.setTime(fromTime);
-            reservationEntity.setNumberOfPersons(Integer.parseInt(numberOfPersons));
-            reservationEntity.setOrderOnline(orderFoodOnline?"YES":"NO");
-            reservationEntity.setUserId(((UserEntity)session.getAttribute("user")).getUserId());
-            if (RestaurantEntity.getRestaurantById(restaurantId).availableForNewReservation(fromTime)){
-                ReservationEntity.addReservation(reservationEntity);
+            if (ReservationEntity.getReservationByUserDateRestaurant(((UserEntity) session.getAttribute("user")).getUserId() + ""
+                    , restaurantId
+                    , new Date(System.currentTimeMillis())) == null) {
+                ReservationEntity reservationEntity = new ReservationEntity();
+                reservationEntity.setRestaurantId(Integer.parseInt(restaurantId));
+                reservationEntity.setTime(fromTime);
+                reservationEntity.setDate(new Date(System.currentTimeMillis()));
+                reservationEntity.setNumberOfPersons(Integer.parseInt(numberOfPersons));
+                reservationEntity.setOrderOnline(orderFoodOnline ? "YES" : "NO");
+                reservationEntity.setUserId(((UserEntity) session.getAttribute("user")).getUserId());
+                if (RestaurantEntity.getRestaurantById(restaurantId).availableForNewReservation(fromTime)) {
+                    ReservationEntity.addReservation(reservationEntity);
+                } else {
+                    modelAndView.setViewName("redirect:/restaurant/" + restaurantId + "?timeError=No available tables at this time.");
+                }
+                return modelAndView;
             }else {
-                modelAndView.setViewName("redirect:/restaurant/" + restaurantId+"?timeError=No available tables at this time.");
+                modelAndView.setViewName("redirect:/restaurant/" + restaurantId + "?timeError=you already have a reservation today in this Restaurant");
+                return modelAndView;
             }
-            return modelAndView;
         } else {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
@@ -176,29 +186,28 @@ public class RestaurantController {
     }
 
     @RequestMapping(value = "/reservations")
-    public ModelAndView showOrders(HttpSession session)
-    {
-        if (session.getAttribute("restaurantUser") != null){
+    public ModelAndView showOrders(HttpSession session) {
+        if (session.getAttribute("restaurantUser") != null) {
             RestaurantEntity restaurant = (RestaurantEntity) session.getAttribute("restaurantUser");
             ModelAndView modelAndView = new ModelAndView("reservations");
             modelAndView.addObject("reservations", restaurant.getReservations());
             return modelAndView;
-        }else {
+        } else {
             return new ModelAndView("redirect:/restaurantLogin");
         }
     }
+
     @RequestMapping(value = "/cancelReservation/{reservationId}")
-    public ModelAndView cancelReservation(HttpSession session, @PathVariable(value = "reservationId") String reservationId)
-    {
-        if (session.getAttribute("user") != null && ReservationEntity.getById(reservationId).getUserId() == ((UserEntity)session.getAttribute("user")).getUserId()){
+    public ModelAndView cancelReservation(HttpSession session, @PathVariable(value = "reservationId") String reservationId) {
+        if (session.getAttribute("user") != null && ReservationEntity.getById(reservationId).getUserId() == ((UserEntity) session.getAttribute("user")).getUserId()) {
             ReservationEntity reservationEntity = ReservationEntity.getById(reservationId);
-            for (OrderEntity orderEntity:reservationEntity.getAllOrders()
-                 ) {
+            for (OrderEntity orderEntity : reservationEntity.getAllOrders()
+            ) {
                 OrderEntity.removeOrder(orderEntity);
             }
             ReservationEntity.removeReservation(reservationEntity);
             return new ModelAndView("redirect:/cart");
-        }else {
+        } else {
             return new ModelAndView("redirect:/restaurantLogin");
         }
     }

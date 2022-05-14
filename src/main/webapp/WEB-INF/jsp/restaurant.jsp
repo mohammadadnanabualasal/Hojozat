@@ -9,6 +9,7 @@
 
 <%
     pageContext.setAttribute("restaurant", session.getAttribute("requestedRestaurant"));
+    pageContext.setAttribute("restaurantUser", session.getAttribute("restaurantUser"));
 %>
 <c:set var="displayTables" value="none"/>
 <c:set var="activeTables" value=""/>
@@ -29,15 +30,17 @@
         <div class="col-md-4">
             <div class="row"><h3>${restaurant.name}</h3></div>
             <div class="row">
-                <img class="restaurantImg img-full" src="https://media.timeout.com/images/105846896/750/422/image.jpg"/>
+                <img class="restaurantImg img-full" src="/restaurantImage/${restaurant.id}"/>
             </div>
             <div class="row justify-content-center">
                 <ul class="nav">
-                    <li class="nav-item">
+                    <c:if test="${restaurantUser == null}">
+                        <li class="nav-item">
                         <a class="nav-link ${activeTables} tablinks" aria-current="page"
                            onclick="openTab(event, 'tables')"><h3>
                             Tables</h3></a>
                     </li>
+                    </c:if>
                     <li class="nav-item">
                         <a class="nav-link ${menuActive} tablinks" onclick="openTab(event, 'menu')"><h3>Menu</h3></a>
                     </li>
@@ -65,8 +68,7 @@
                             <c:if test="${restaurant.servingToTime eq '00:00:00'}">
                                 <c:set var="servingToTime" value="24:00:00"/>
                             </c:if>
-                            <c:forEach begin="${fn:substringBefore(restaurant.servingFromTime, ':')}"
-                                       end="${fn:substringBefore(servingToTime, ':')-1}" var="hour">
+                            <c:forEach items="${servingHoursList}" var="hour">
                                 <option selected>${hour}:00 to ${hour +1}:00</option>
                             </c:forEach>
                         </select>

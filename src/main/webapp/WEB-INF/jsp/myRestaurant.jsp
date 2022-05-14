@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-4">
             <div class="row">
-                <img class="restaurantImg img-full" src="https://media.timeout.com/images/105846896/750/422/image.jpg"/>
+                <img class="restaurantImg img-full" src="/restaurantImage/${myRestaurant.id}"/>
             </div>
             <div class="row justify-content-center">
                 <ul class="nav">

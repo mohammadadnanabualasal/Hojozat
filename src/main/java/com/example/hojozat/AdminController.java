@@ -90,7 +90,11 @@ public class AdminController {
     @RequestMapping(value = "/addRestaurant", method = RequestMethod.GET)
     public ModelAndView addRestaurant(HttpSession session) {
 
+        if (session.getAttribute("user") != null && ((UserEntity) session.getAttribute("user")).getIsAdmin().equals("YES")) {
         return new ModelAndView("addRestaurant");
+        }else {
+            return new ModelAndView("redirect:/login");
+        }
     }
 
     @RequestMapping(value = "/addRestaurant", method = RequestMethod.POST)
@@ -137,12 +141,12 @@ public class AdminController {
                 throw new RuntimeException(e);
             }
             restaurant.setServingToTime(new Time(ms));
-            boolean success = false;
             try {
                 if (restaurants == 0) {
-                    success = RestaurantEntity.addNewRestaurant(restaurant, false);
-                    if (success) {
-                        ModelAndView modelAndView = new ModelAndView("redirect:/restaurant/" + restaurant.getId());
+                    int newId = RestaurantEntity.addNewRestaurant(restaurant, false);
+                    if (newId != -1) {
+                        ImagesController.saveRestaurantImage(request.getParts(), restaurant);
+                        ModelAndView modelAndView = new ModelAndView("redirect:/restaurant/" + newId);
                         modelAndView.addObject("restaurant", restaurant);
                         return modelAndView;
                     }
@@ -150,7 +154,7 @@ public class AdminController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return new ModelAndView("addAdmin");
+            return new ModelAndView("redirect:/addRestaurant");
         } else {
             return new ModelAndView("redirect:/home");
         }

@@ -2,6 +2,9 @@ package com.example.hojozat.entities;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +13,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "restaurant", schema = "Hojozat", catalog = "")
 public class RestaurantEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id")
     private int id;
     @Basic
     @Column(name = "email")
@@ -47,7 +52,7 @@ public class RestaurantEntity {
     @Column(name = "servingToTime")
     private Time servingToTime;
 
-    public static boolean addNewRestaurant(RestaurantEntity restaurantEntity, boolean update) {
+    public static int addNewRestaurant(RestaurantEntity restaurantEntity, boolean update) {
         try {
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
             EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -58,14 +63,15 @@ public class RestaurantEntity {
             } else {
                 entityManager.persist(restaurantEntity);
             }
+            entityManager.flush();
             transaction.commit();
             entityManager.close();
             entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
-            return false;
+            return -1;
         }
-        return true;
+        return restaurantEntity.getId();
 
     }
 
@@ -336,5 +342,21 @@ public class RestaurantEntity {
         }else {
             return true;
         }
+    }
+
+    public int[] getServingHours() {
+        LocalTime start = getServingFromTime().toLocalTime().plusHours(getServingFromTime().toLocalTime().getMinute() ==0
+                || getServingFromTime().toLocalTime().getHour() >= getServingToTime().toLocalTime().getHour()?0:1).truncatedTo(ChronoUnit.HOURS);
+        LocalTime end = getServingToTime().toLocalTime().minusHours(0).truncatedTo(ChronoUnit.HOURS);
+        if (end.getHour() <= start.getHour()){
+            return new int[0];
+        }
+        int[] array = new int[end.getHour() - start.getHour()];
+        int i =0;
+        for (int j = start.getHour(); j < end.getHour(); j++) {
+            array[i] = j;
+            i++;
+        }
+        return array;
     }
 }
