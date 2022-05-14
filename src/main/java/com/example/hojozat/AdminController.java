@@ -184,7 +184,7 @@ public class AdminController {
                                      @RequestParam(name = "confirmPassword") String confirmPassword, @RequestParam(name = "phone") String phone,
                                      @RequestParam(name = "makeItAdmin", defaultValue = "false") boolean isAdmin) {
         if (session.getAttribute("user") != null && ((UserEntity) session.getAttribute("user")).getIsAdmin().equals("YES")) {
-            if (confirmPassword.equals(password)){
+            if (!confirmPassword.equals(password)){
                 return new ModelAndView("redirect:/addAdmin");
             }
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
