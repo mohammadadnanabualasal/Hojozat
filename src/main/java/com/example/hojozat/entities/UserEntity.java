@@ -11,7 +11,9 @@ import java.util.Objects;
 @Entity
 @Table(name = "user", schema = "Hojozat", catalog = "")
 public class UserEntity {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "userId")
     private int userId;
     @Basic
     @Column(name = "firstName")
@@ -33,41 +35,37 @@ public class UserEntity {
     private String isAdmin;
 
     public static UserEntity getUserByEmail(String email) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        UserEntity user;
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            UserEntity user;
             Query query = entityManager.createNativeQuery("SELECT * FROM  user WHERE email='" + email + "';", UserEntity.class);
             user = (UserEntity) query.getResultList().get(0);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }finally {
             entityManager.close();
             entityManagerFactory.close();
-            return user;
-        } catch (Exception exception) {
-            return null;
         }
+        return user;
     }
 
     public static UserEntity getUserById(String id) {
-        try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            UserEntity user;
-            Query query = entityManager.createNativeQuery("SELECT * FROM  user WHERE userId='" + id + "';", UserEntity.class);
-            user = (UserEntity) query.getResultList().get(0);
-            entityManager.close();
-            entityManagerFactory.close();
-            return user;
-        } catch (Exception exception) {
-            return null;
-        }
-    }
-
-    public static int getGreaterIdOfTable(String tableName) {
-        String queryStatement = "SELECT MAX(userId) FROM " + tableName + " LIMIT 1;";
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery(queryStatement);
-        return query.getResultList().get(0) != null ? (int) query.getResultList().get(0) : 0;
+        UserEntity user;
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM  user WHERE userId='" + id + "';", UserEntity.class);
+            user = (UserEntity) query.getResultList().get(0);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
+        return user;
     }
 
     public int getUserId() {
@@ -140,12 +138,12 @@ public class UserEntity {
     }
 
     public static boolean addNewUser(UserEntity user, boolean update) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
             if (user.getIsAdmin() == null) {
                 user.setIsAdmin("NO");
             }
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             if (update) {
@@ -153,12 +151,14 @@ public class UserEntity {
             } else {
                 entityManager.persist(user);
             }
+            entityManager.flush();
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return true;
 
@@ -166,18 +166,20 @@ public class UserEntity {
 
     public static List<UserEntity> getAllUsers(String term) {
         List<UserEntity> userEntities = new ArrayList<>();
-        if (term.isEmpty()) {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNativeQuery("SELECT * FROM user", UserEntity.class);
-            userEntities = query.getResultList();
-            entityManager.close();
-            entityManagerFactory.close();
-        } else {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email LIKE '%" + term + "%'  ORDER BY INSTR(email,'" + term + "');", UserEntity.class);
-            userEntities = query.getResultList();
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            if (term.isEmpty()) {
+                Query query = entityManager.createNativeQuery("SELECT * FROM user", UserEntity.class);
+                userEntities = query.getResultList();
+            } else {
+                Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email LIKE '%" + term + "%'  ORDER BY INSTR(email,'" + term + "');", UserEntity.class);
+                userEntities = query.getResultList();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        } finally {
             entityManager.close();
             entityManagerFactory.close();
         }
@@ -186,29 +188,35 @@ public class UserEntity {
 
     public static List<UserEntity> getAllAdmins() {
         List<UserEntity> userEntities = new ArrayList<>();
-
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE isAdmin = 'YES';", UserEntity.class);
-        userEntities = query.getResultList();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE isAdmin = 'YES';", UserEntity.class);
+            userEntities = query.getResultList();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         return userEntities;
     }
 
     public static boolean removeUser(UserEntity user) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.remove(entityManager.contains(user) ? user : entityManager.merge(user));
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return true;
 
@@ -219,18 +227,24 @@ public class UserEntity {
         List<ReservationEntity> reservationEntities = null;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM reservation where userId=" + getUserId() + ";", ReservationEntity.class);
-        reservationEntities = query.getResultList();
-        for (ReservationEntity reservationEntity : reservationEntities
-        ) {
-            Query query2 = entityManager.createNativeQuery("SELECT * FROM orders where reservationId=" + reservationEntity.getId() + ";", OrderEntity.class);
-            for (OrderEntity orderEntity : (List<OrderEntity>) query2.getResultList()
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM reservation where userId=" + getUserId() + ";", ReservationEntity.class);
+            reservationEntities = query.getResultList();
+            for (ReservationEntity reservationEntity : reservationEntities
             ) {
-                number += orderEntity.getQuantity();
+                Query query2 = entityManager.createNativeQuery("SELECT * FROM orders where reservationId=" + reservationEntity.getId() + ";", OrderEntity.class);
+                for (OrderEntity orderEntity : (List<OrderEntity>) query2.getResultList()
+                ) {
+                    number += orderEntity.getQuantity();
+                }
             }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return -1;
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
-        entityManager.close();
-        entityManagerFactory.close();
         return number;
     }
 

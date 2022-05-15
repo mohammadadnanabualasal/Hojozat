@@ -80,33 +80,36 @@ public class DishesEntity {
 
     public static DishesEntity getDishById(int id)
     {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        DishesEntity dishesEntity;
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            DishesEntity dishesEntity;
             Query query = entityManager.createNativeQuery("SELECT * FROM  dishes WHERE id='" + id + "';", DishesEntity.class);
             dishesEntity = (DishesEntity) query.getResultList().get(0);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }finally {
             entityManager.close();
             entityManagerFactory.close();
-            return dishesEntity;
-        } catch (Exception exception) {
-            return null;
         }
+        return dishesEntity;
     }
 
     public static boolean removeDish(DishesEntity dish) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.remove(entityManager.contains(dish) ? dish : entityManager.merge(dish));
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return true;
 

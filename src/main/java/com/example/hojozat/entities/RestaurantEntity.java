@@ -53,9 +53,9 @@ public class RestaurantEntity {
     private Time servingToTime;
 
     public static int addNewRestaurant(RestaurantEntity restaurantEntity, boolean update) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             if (update) {
@@ -65,60 +65,67 @@ public class RestaurantEntity {
             }
             entityManager.flush();
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return -1;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return restaurantEntity.getId();
 
     }
 
     public static RestaurantEntity getRestaurantByEmail(String email) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        RestaurantEntity restaurant;
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            RestaurantEntity restaurant;
             Query query = entityManager.createNativeQuery("SELECT * FROM  restaurant WHERE email='" + email + "';", RestaurantEntity.class);
             restaurant = (RestaurantEntity) query.getResultList().get(0);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }finally {
             entityManager.close();
             entityManagerFactory.close();
-            return restaurant;
-        } catch (Exception exception) {
-            return null;
         }
+        return restaurant;
     }
 
     public static RestaurantEntity getRestaurantById(String id) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        RestaurantEntity restaurant;
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            RestaurantEntity restaurant;
             Query query = entityManager.createNativeQuery("SELECT * FROM  restaurant WHERE id='" + id + "';", RestaurantEntity.class);
             restaurant = (RestaurantEntity) query.getResultList().get(0);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }finally {
             entityManager.close();
             entityManagerFactory.close();
-            return restaurant;
-        } catch (Exception exception) {
-            return null;
         }
+        return restaurant;
     }
 
     public static List<RestaurantEntity> getAllRestaurants(String term) {
         List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-        if (term.isEmpty()) {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNativeQuery("SELECT * FROM restaurant", RestaurantEntity.class);
-            restaurantEntities = query.getResultList();
-            entityManager.close();
-            entityManagerFactory.close();
-        } else {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNativeQuery("SELECT * FROM restaurant WHERE name LIKE '%" + term + "%' ORDER BY INSTR(name,'" + term + "');", RestaurantEntity.class);
-            restaurantEntities = query.getResultList();
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+            if (term.isEmpty()) {
+                Query query = entityManager.createNativeQuery("SELECT * FROM restaurant", RestaurantEntity.class);
+                restaurantEntities = query.getResultList();
+            } else {
+                Query query = entityManager.createNativeQuery("SELECT * FROM restaurant WHERE name LIKE '%" + term + "%' ORDER BY INSTR(name,'" + term + "');", RestaurantEntity.class);
+                restaurantEntities = query.getResultList();
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        } finally {
             entityManager.close();
             entityManagerFactory.close();
         }
@@ -126,18 +133,19 @@ public class RestaurantEntity {
     }
 
     public static boolean removeRestaurant(RestaurantEntity restaurant) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.remove(entityManager.contains(restaurant) ? restaurant : entityManager.merge(restaurant));
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return true;
 
@@ -253,9 +261,9 @@ public class RestaurantEntity {
     }
 
     public static int addNewDish(DishesEntity dishesEntity, boolean update) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             if (update) {
@@ -265,11 +273,12 @@ public class RestaurantEntity {
             }
             entityManager.flush();
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return -1;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return dishesEntity.getId();
 
@@ -279,10 +288,16 @@ public class RestaurantEntity {
         List<DishesEntity> dishesEntities = new ArrayList<>();
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM dishes;", DishesEntity.class);
-        dishesEntities = query.getResultList();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM dishes;", DishesEntity.class);
+            dishesEntities = query.getResultList();
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return null;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         return dishesEntities;
     }
 
@@ -290,22 +305,33 @@ public class RestaurantEntity {
         List<DishesEntity> dishesEntities = new ArrayList<>();
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM dishes where restaurantId=" + getId() + ";", DishesEntity.class);
-        dishesEntities = query.getResultList();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM dishes where restaurantId=" + getId() + ";", DishesEntity.class);
+            dishesEntities = query.getResultList();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         return dishesEntities;
     }
 
     public void update() {
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-        entityManager.merge(this);
-        transaction.commit();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+            EntityTransaction transaction = entityManager.getTransaction();
+            transaction.begin();
+            entityManager.merge(this);
+            transaction.commit();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
     }
 
     public List<ReservationEntity> getReservations()
@@ -313,10 +339,16 @@ public class RestaurantEntity {
         List<ReservationEntity> reservation = null;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM reservation where restaurantId=" + getId() + ";", ReservationEntity.class);
-        reservation = query.getResultList();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM reservation where restaurantId=" + getId() + ";", ReservationEntity.class);
+            reservation = query.getResultList();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         return reservation;
 
     }
@@ -326,11 +358,17 @@ public class RestaurantEntity {
         List<ReservationEntity> reservation = null;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM reservation where restaurantId=" + getId()
-                + " and time='"+time+"';", ReservationEntity.class);
-        reservation = query.getResultList();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM reservation where restaurantId=" + getId()
+                    + " and time='" + time + "';", ReservationEntity.class);
+            reservation = query.getResultList();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         return reservation;
 
     }

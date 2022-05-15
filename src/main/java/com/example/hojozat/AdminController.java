@@ -108,15 +108,22 @@ public class AdminController {
             , @RequestParam("about") String about
             , @RequestParam("fromTime") String fromTime
             , @RequestParam("toTime") String toTime
-            , @RequestParam("password") String password) {
+            , @RequestParam("password") String password)
+    {
 
         if (session.getAttribute("user") != null && ((UserEntity) session.getAttribute("user")).getIsAdmin().equals("YES")) {
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNativeQuery("SELECT * FROM restaurant WHERE email = '" + restaurantEmail + "';");
-            int restaurants = query.getResultList().size();
-            entityManager.close();
-            entityManagerFactory.close();
+            int restaurants = 0;
+            try {
+                Query query = entityManager.createNativeQuery("SELECT * FROM restaurant WHERE email = '" + restaurantEmail + "';");
+                restaurants = query.getResultList().size();
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            } finally {
+                entityManager.close();
+                entityManagerFactory.close();
+            }
             RestaurantEntity restaurant = new RestaurantEntity();
             restaurant.setName(restaurantName);
             restaurant.setEmail(restaurantEmail);
@@ -189,10 +196,16 @@ public class AdminController {
             }
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '" + email + "';");
-            int users = query.getResultList().size();
-            entityManager.close();
-            entityManagerFactory.close();
+            int users = 0;
+            try {
+                Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '" + email + "';");
+                users = query.getResultList().size();
+            }catch (Exception exception){
+                exception.printStackTrace();
+            }finally {
+                entityManager.close();
+                entityManagerFactory.close();
+            }
             UserEntity userEntity = new UserEntity();
             userEntity.setFirstName(firstName);
             userEntity.setLastName(lastName);
@@ -257,16 +270,21 @@ public class AdminController {
         if (session.getAttribute("user") != null && ((UserEntity) session.getAttribute("user")).getIsAdmin().equals("YES")) {
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
             EntityManager entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '" + email + "';", UserEntity.class);
-            UserEntity userEntity = (UserEntity) query.getResultList().get(0);
-            if (removeOrAddRole.equals("R")) {
-                userEntity.setIsAdmin("NO");
-            } else if (removeOrAddRole.equals("A")) {
-                userEntity.setIsAdmin("YES");
+            try {
+                Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '" + email + "';", UserEntity.class);
+                UserEntity userEntity = (UserEntity) query.getResultList().get(0);
+                userEntity.addNewUser(userEntity, true);
+                if (removeOrAddRole.equals("R")) {
+                    userEntity.setIsAdmin("NO");
+                } else if (removeOrAddRole.equals("A")) {
+                    userEntity.setIsAdmin("YES");
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            } finally {
+                entityManager.close();
+                entityManagerFactory.close();
             }
-            entityManager.close();
-            entityManagerFactory.close();
-            userEntity.addNewUser(userEntity, true);
         }
     }
 

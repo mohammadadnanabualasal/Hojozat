@@ -41,10 +41,16 @@ public class RegisterController {
 
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '"+email+"';");
-        int users =  query.getResultList().size();
-        entityManager.close();
-        entityManagerFactory.close();
+        int users =0;
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '" + email + "';");
+            users = query.getResultList().size();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        } finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName(firstName);
         userEntity.setLastName(lastName);
@@ -52,7 +58,6 @@ public class RegisterController {
         userEntity.setEmail(email);
         userEntity.setPhone(phone);
         userEntity.setIsAdmin("NO");
-        userEntity.setUserId(userEntity.getGreaterIdOfTable("user")+1);
 
         if (session.getAttribute("user") !=null){
             return new ModelAndView("redirect:/home");
@@ -64,7 +69,9 @@ public class RegisterController {
             boolean isSaved = false;
 
             try {
-                isSaved = userEntity.addNewUser(userEntity, false);
+                if (users <= 0) {
+                    isSaved = userEntity.addNewUser(userEntity, false);
+                }
             }catch (Exception e){
                 ModelAndView modelAndView = new ModelAndView("create");
                 modelAndView.addObject("user", userEntity);

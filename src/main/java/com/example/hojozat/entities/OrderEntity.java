@@ -70,9 +70,9 @@ public class OrderEntity {
     }
 
     public static int addOrder(OrderEntity orderEntity, boolean update) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             if (update){
@@ -82,11 +82,12 @@ public class OrderEntity {
             }
             entityManager.flush();
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return -1;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return orderEntity.getId();
 
@@ -95,34 +96,35 @@ public class OrderEntity {
     public static OrderEntity getByDishAndReservationID(int dishId, int reservationId)
     {
         OrderEntity orderEntity = null;
-
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             Query query = entityManager.createNativeQuery("SELECT * FROM  orders WHERE dishId=" + dishId + " and reservationId="+reservationId+";", OrderEntity.class);
             orderEntity = (OrderEntity) query.getResultList().get(0);
-            entityManager.close();
-            entityManagerFactory.close();
-            return orderEntity;
         } catch (Exception exception) {
             return null;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
+        return orderEntity;
     }
 
     public static boolean removeOrder(OrderEntity orderEntity)
     {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.remove(entityManager.contains(orderEntity) ? orderEntity : entityManager.merge(orderEntity));
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return true;
     }

@@ -19,9 +19,9 @@ public class SpringConfig {
 
     @Scheduled(fixedDelay = 10000)
     public void autoRemoveOutOfDateReservations() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             Date date = new Date(System.currentTimeMillis());
             Query query = entityManager.createNativeQuery("SELECT * FROM reservation where date < '" + date + "';", ReservationEntity.class);
             List<ReservationEntity> list;
@@ -31,10 +31,11 @@ public class SpringConfig {
                 reservation.getAllOrders().forEach(orderEntity -> OrderEntity.removeOrder(orderEntity));
                 ReservationEntity.removeReservation(reservation);
             }
-            entityManager.close();
-            entityManagerFactory.close();
         }catch (Exception exception){
             exception.printStackTrace();
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
     }
 }

@@ -38,19 +38,20 @@ public class ReservationEntity {
     private Date date;
 
     public static int addReservation(ReservationEntity reservationEntity) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.persist(reservationEntity);
             entityManager.flush();
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return -1;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return reservationEntity.getId();
 
@@ -60,58 +61,70 @@ public class ReservationEntity {
         List<ReservationEntity> reservationEntities = new ArrayList<>();
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM reservation where userId=" + userId + ";", ReservationEntity.class);
-        reservationEntities = query.getResultList();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM reservation where userId=" + userId + ";", ReservationEntity.class);
+            reservationEntities = query.getResultList();
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return null;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         return reservationEntities;
     }
 
     public static ReservationEntity getReservationsByUserAndRestaurant(int userId, int restaurantId) {
-        ReservationEntity reservationEntity = null;
+        ReservationEntity reservationEntity;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM reservation where userId=" + userId + " and restaurantId=" + restaurantId + ";", ReservationEntity.class);
-        if (query.getResultList().size() > 0) {
-            reservationEntity = (ReservationEntity) query.getResultList().get(0);
-        } else {
+        try {
+            Query query = entityManager.createNativeQuery("SELECT * FROM reservation where userId=" + userId + " and restaurantId=" + restaurantId + ";", ReservationEntity.class);
+            if (query.getResultList().size() > 0) {
+                reservationEntity = (ReservationEntity) query.getResultList().get(0);
+            } else {
+                return null;
+            }
+        } catch (Exception exception) {
             entityManager.close();
             entityManagerFactory.close();
             return null;
         }
-        entityManager.close();
-        entityManagerFactory.close();
         return reservationEntity;
     }
 
     public static ReservationEntity getById(String id) {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             ReservationEntity reservationEntity;
             Query query = entityManager.createNativeQuery("SELECT * FROM  reservation WHERE id='" + id + "';", ReservationEntity.class);
             reservationEntity = (ReservationEntity) query.getResultList().get(0);
-            entityManager.close();
-            entityManagerFactory.close();
             return reservationEntity;
         } catch (Exception exception) {
+            exception.printStackTrace();
             return null;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
     }
 
     public static boolean removeReservation(ReservationEntity reservationEntity) {
+
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             EntityTransaction transaction = entityManager.getTransaction();
             transaction.begin();
             entityManager.remove(entityManager.contains(reservationEntity) ? reservationEntity : entityManager.merge(reservationEntity));
             transaction.commit();
-            entityManager.close();
-            entityManagerFactory.close();
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
         }
         return true;
     }
@@ -185,10 +198,17 @@ public class ReservationEntity {
         List<OrderEntity> orderEntities = new ArrayList<>();
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        Query query = entityManager.createNativeQuery("SELECT * FROM orders where reservationId=" + getId() + ";", OrderEntity.class);
-        orderEntities = query.getResultList();
-        entityManager.close();
-        entityManagerFactory.close();
+        try {
+
+            Query query = entityManager.createNativeQuery("SELECT * FROM orders where reservationId=" + getId() + ";", OrderEntity.class);
+            orderEntities = query.getResultList();
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return null;
+        }finally {
+            entityManager.close();
+            entityManagerFactory.close();
+        }
         return orderEntities;
     }
 
@@ -206,16 +226,17 @@ public class ReservationEntity {
 
     public static ReservationEntity getReservationByUserDateRestaurant(String userId, String restaurantId, Date date) {
         ReservationEntity reservationEntity;
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-            EntityManager entityManager = entityManagerFactory.createEntityManager();
             Query query = entityManager.createNativeQuery("SELECT * FROM reservation  where userId=" + userId + " and restaurantId=" + restaurantId + " and date='" + date + "';", ReservationEntity.class);
             reservationEntity = (ReservationEntity) query.getResultList().get(0);
+        } catch (Exception exception) {
+            return null;
+        } finally {
             entityManager.close();
             entityManagerFactory.close();
-            return reservationEntity;
-        }catch (Exception exception){
-            return null;
         }
-        }
+        return reservationEntity;
+    }
     }
