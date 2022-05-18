@@ -12,22 +12,22 @@
                 <label for="dishName">
                     Dish Name
                 </label>
-                <input name="dishName" type="text" class="form-control" id="dishName" />
+                <input name="dishName" type="text" class="form-control" id="dishName" required/>
             </div>
             <div class="form-group">
                 <label for="price">
                     Price
                 </label>
-                <input name="price" type="number" class="form-control" id="price" step="0.01"/>
+                <input name="price" type="number" class="form-control" id="price" step="0.01" required/>
             </div>
             <div class="form-group">
                 <label for="description">
                     Description
                 </label>
-                <input name="description" type="text" class="form-control" id="description" />
+                <input name="description" type="text" class="form-control" id="description" required/>
             </div>
             <div class="form-group">
-                <input id="imageFile" name="imageFile" type="file" class="form-control-file" multiple>
+                <input id="imageFile" name="imageFile" type="file" class="form-control-file" multiple required>
             </div>
             <button type="submit" class="btn btn-primary">
                 Add

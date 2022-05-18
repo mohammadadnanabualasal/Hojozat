@@ -13,28 +13,28 @@
                 <label for="restaurantName">
                     Restaurant Name
                 </label>
-                <input name="restaurantName" type="text" class="form-control" id="restaurantName" />
+                <input name="restaurantName" type="text" class="form-control" id="restaurantName" required/>
             </div>
             <div class="form-group">
 
                 <label for="restaurantEmail">
                     Email address
                 </label>
-                <input name="restaurantEmail" type="email" class="form-control" id="restaurantEmail" />
+                <input name="restaurantEmail" type="email" class="form-control" id="restaurantEmail" required/>
             </div>
             <div class="form-group">
 
                 <label for="restaurantPhoneNumber">
                     Restaurant Phone Number
                 </label>
-                <input name="restaurantPhoneNumber" type="text" class="form-control" id="restaurantPhoneNumber" />
+                <input name="restaurantPhoneNumber" type="text" class="form-control" id="restaurantPhoneNumber" required/>
             </div>
             <div class="form-group">
 
                 <label for="restaurantLocation">
                     Restaurant Location
                 </label>
-                <input name="restaurantLocation" type="text" class="form-control" id="restaurantLocation" />
+                <input name="restaurantLocation" type="text" class="form-control" id="restaurantLocation" required/>
             </div>
             <p> Serving Hours:</p>
             <div class="form-group">
@@ -42,14 +42,14 @@
                 <label for="fromTime">
                     From
                 </label>
-                <input name="fromTime" type="time" class="form-control" id="fromTime" />
+                <input name="fromTime" type="time" class="form-control" id="fromTime" required/>
             </div>
             <div class="form-group">
 
                 <label for="toTime">
                     To
                 </label>
-                <input name="toTime" type="time" class="form-control" id="toTime" />
+                <input name="toTime" type="time" class="form-control" id="toTime" required/>
             </div>
             <div class="form-group">
                 <input name="familiesSection" type="checkbox" id="familiesSection" />
@@ -61,32 +61,29 @@
                 <label for="numberOfTables">
                     Number of Available Tables
                 </label>
-                <input name="numberOfTables" type="number" id="numberOfTables" min="1"/>
+                <input name="numberOfTables" type="number" id="numberOfTables" min="1" required/>
             </div>
             <div class="form-group">
                 <label for="about">
                     About the Restaurant:
                 </label>
                 <br/>
-                <textarea name="about" id="about" cols="80" rows="10"></textarea>
+                <textarea name="about" id="about" cols="80" rows="10" required></textarea>
             </div>
             <div class="form-group">
                 <input id="imageFile" name="imageFile" type="file" class="form-control-file" multiple>
             </div>
             <div class="form-group">
-
                 <label for="exampleInputPassword1">
                     Password
                 </label>
-                <input name="password" type="password" class="form-control" id="exampleInputPassword1" />
+                <input name="password" type="password" class="form-control" id="exampleInputPassword1" required/>
             </div>
-
             <div class="form-group">
-
                 <label for="confirmPassword">
                     Confirm your Password
                 </label>
-                <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" />
+                <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" required/>
             </div>
             <button type="submit" class="btn btn-primary">
                 Add

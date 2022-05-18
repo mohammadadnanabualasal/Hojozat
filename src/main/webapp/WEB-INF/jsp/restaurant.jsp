@@ -77,7 +77,7 @@
                     <input name="restaurantId" type="number" value="${restaurant.id}" hidden>
                     <div class="form-group">
                         <label for="numberOfPersons">Number Of Persons:</label>
-                        <input type="number" min="1" max="10" id="numberOfPersons" name="numberOfPersons" value="1">
+                        <input type="number" min="1" max="10" id="numberOfPersons" name="numberOfPersons" value="1" required>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Reserve</button>

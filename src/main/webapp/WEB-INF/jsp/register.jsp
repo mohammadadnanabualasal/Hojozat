@@ -18,27 +18,27 @@
                             <label for="firstName">
                                 First Name
                             </label>
-                            <input name="firstName" type="text" class="form-control" id="firstName" />
+                            <input name="firstName" type="text" class="form-control" id="firstName" required/>
                         </div>
                         <div class="form-group">
 
                             <label for="lastName">
                                 Last Name
                             </label>
-                            <input name="lastName" type="text" class="form-control" id="lastName" />
+                            <input name="lastName" type="text" class="form-control" id="lastName" required/>
                         </div>
                         <div class="form-group">
 
                             <label for="exampleInputEmail1">
                                 Email address
                             </label>
-                            <input name="email" type="email" class="form-control" id="exampleInputEmail1" />
+                            <input name="email" type="email" class="form-control" id="exampleInputEmail1" required/>
                         </div>
                         <div class="form-group">
                             <label for="phone">
                                 Phone Number
                             </label>
-                            <input name="phone" type="number" class="form-control" id="phone" />
+                            <input name="phone" type="number" class="form-control" id="phone" required/>
                         </div>
                         <div class="form-group">
                             <input id="imageFile" name="imageFile" type="file" class="form-control-file" multiple>
@@ -47,7 +47,7 @@
                             <label for="password">
                                 Password
                             </label>
-                            <input name="password" type="password" class="form-control" id="password" />
+                            <input name="password" type="password" class="form-control" id="password" required/>
                         </div>
 
                         <div class="form-group">
@@ -55,7 +55,7 @@
                             <label for="confirmPassword">
                                 Confirm your Password
                             </label>
-                            <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" />
+                            <input name="confirmPassword" type="password" class="form-control" id="confirmPassword" required/>
                         </div>
                         <button type="submit" class="btn btn-primary">
                             Register

@@ -35,9 +35,13 @@ public class RegisterController {
     }
 
     @RequestMapping(value = "/doRegister",method = RequestMethod.POST)
-    public ModelAndView createUser(HttpSession session, HttpServletRequest httpServletRequest, @RequestParam(name="firstName")String firstName, @RequestParam(name="lastName") String lastName,
-                                   @RequestParam(name = "email") String email, @RequestParam(name="password") String password,
-                                   @RequestParam(name = "confirmPassword") String confirmPassword, @RequestParam(name="phone") String phone){
+    public ModelAndView createUser(HttpSession session, HttpServletRequest httpServletRequest
+            , @RequestParam(name="firstName")String firstName
+            , @RequestParam(name="lastName") String lastName
+            ,@RequestParam(name = "email") String email
+            , @RequestParam(name="password") String password
+            ,@RequestParam(name = "confirmPassword") String confirmPassword
+            , @RequestParam(name="phone") String phone){
 
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();

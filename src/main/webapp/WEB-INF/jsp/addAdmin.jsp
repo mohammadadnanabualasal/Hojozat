@@ -19,49 +19,44 @@
         </form>
         <form role="form" class="login-form" action="/addAdmin" method="post">
             <div class="form-group">
-
                 <label for="firstName">
                     First Name
                 </label>
-                <input type="text" class="form-control" id="firstName" name="firstName"/>
+                <input type="text" class="form-control" id="firstName" name="firstName" required/>
             </div>
             <div class="form-group">
-
                 <label for="lastName">
                     Last Name
                 </label>
-                <input type="text" class="form-control" id="lastName"  name="lastName"/>
+                <input type="text" class="form-control" id="lastName"  name="lastName" required/>
             </div>
             <div class="form-group">
                 <label for="phone">
-                    Last Name
+                    Phone
                 </label>
-                <input type="number" class="form-control" id="phone"  name="phone"/>
+                <input type="number" class="form-control" id="phone"  name="phone" required/>
             </div>
             <div class="form-group">
-
                 <label for="email">
                     Email address
                 </label>
-                <input type="email" class="form-control" id="email"  name="email"/>
+                <input type="email" class="form-control" id="email"  name="email" required/>
             </div>
             <div class="form-group">
                 <input type="checkbox" class="form-makeItAdmin" id="makeItAdmin"  name="makeItAdmin"/>
                 <label for="makeItAdmin">Make it admin?</label>
             </div>
             <div class="form-group">
-
                 <label for="password">
                     Password
                 </label>
-                <input type="password" class="form-control" id="password" name="password"/>
+                <input type="password" class="form-control" id="password" name="password" required/>
             </div>
             <div class="form-group">
-
                 <label for="confirmPassword">
                     Confirm your Password
                 </label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"/>
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required/>
             </div>
             <button type="submit" class="btn btn-primary">
                 Create New User
