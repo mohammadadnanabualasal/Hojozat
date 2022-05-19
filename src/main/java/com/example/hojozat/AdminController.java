@@ -114,7 +114,19 @@ public class AdminController {
         if (session.getAttribute("user") != null && ((UserEntity) session.getAttribute("user")).getIsAdmin().equals("YES")) {
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
             EntityManager entityManager = entityManagerFactory.createEntityManager();
+            ModelAndView modelAndView = new ModelAndView("redirect:/addRestaurant");
             int restaurants = 0;
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+            try {
+                Time from = new Time(sdf.parse(fromTime).getTime());
+                Time to = new Time(sdf.parse(toTime).getTime());
+                if (from.after(to)){
+                    modelAndView.addObject("error", "the From time should be before the To time.");
+                    return modelAndView;
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             try {
                 Query query = entityManager.createNativeQuery("SELECT * FROM restaurant WHERE email = '" + restaurantEmail + "';");
                 restaurants = query.getResultList().size();
@@ -134,7 +146,6 @@ public class AdminController {
             restaurant.setPassword(password);
             restaurant.setAbout(about);
             restaurant.setReservedTables(0);
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
             long ms;
             try {
                 ms = sdf.parse(fromTime).getTime();
@@ -153,7 +164,7 @@ public class AdminController {
                     int newId = RestaurantEntity.addNewRestaurant(restaurant, false);
                     if (newId != -1) {
                         ImagesController.saveRestaurantImage(request.getParts(), restaurant);
-                        ModelAndView modelAndView = new ModelAndView("redirect:/restaurant/" + newId);
+                        modelAndView = new ModelAndView("redirect:/restaurant/" + newId);
                         modelAndView.addObject("restaurant", restaurant);
                         return modelAndView;
                     }
