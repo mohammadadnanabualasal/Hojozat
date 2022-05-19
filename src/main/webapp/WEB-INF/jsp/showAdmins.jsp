@@ -9,8 +9,8 @@
 %>
 <c:import url="header.jsp"/>
 <div class="row main-container">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
 
         <c:forEach items="${users}" var="user">
             <div class="card">
@@ -41,6 +41,6 @@
 
         </c:forEach>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-3"></div>
 </div>
 <c:import url="footer.jsp"/>

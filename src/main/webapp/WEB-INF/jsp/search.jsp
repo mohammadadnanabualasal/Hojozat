@@ -5,8 +5,8 @@
 
 <c:import url="header.jsp"/>
 <div class="row main-container">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
         <div id="restaurant-section">
             <c:forEach var="restaurant" items="${restaurants}" begin="${(pageNumber*pageSize)}"
                        end="${(pageNumber +1 )*pageSize - 1}">
@@ -48,6 +48,6 @@
             </c:if>
         </div>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-3"></div>
 </div>
 <c:import url="footer.jsp"/>

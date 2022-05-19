@@ -11,8 +11,8 @@
 %>
 <c:import url="header.jsp"/>
 <div class="row main-container">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
         <c:forEach var="reservation" items="${reservations}">
             <div class="row">
                 <div class="col-md-6 left-alignment"><h3><a href="/restaurant/${reservation.restaurantId}">${reservation.getRestaurantName()}</a></h3></div>
@@ -40,7 +40,7 @@
             </c:forEach>
         </c:forEach>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-3"></div>
 </div>
 <c:import url="footer.jsp"/>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>

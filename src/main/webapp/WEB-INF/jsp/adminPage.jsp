@@ -6,8 +6,8 @@
 <c:import url="header.jsp"/>
 <div class="row main-container">
 
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
         <p>
         <h3><a class="admin-link" href="/restaurants">Restaurants</a></h3><br/>
         <h3><a class="admin-link" href="/users">Users</a></h3><br/>
@@ -16,6 +16,6 @@
         <h3><a class="admin-link" href="/showAdmins">Show Admins</a></h3><br/>
         </p>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-3"></div>
 </div>
 <c:import url="footer.jsp"/>

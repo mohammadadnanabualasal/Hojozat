@@ -9,8 +9,8 @@
 %>
 <c:import url="header.jsp"/>
 <div class="row main-container">
-    <div class="col-md-4"></div>
-    <div class="col-md-4 container">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 container">
         <div class="row">
             <div class="text-center image-center"><img src="/profileImage/${user.userId}" width="200" height="200" class="rounded-circle"> </div>
         </div>
@@ -20,6 +20,6 @@
             <span style="display: block">Phone Number: ${user.phone}</span>
         </div>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-3"></div>
 </div>
 <c:import url="footer.jsp"/>

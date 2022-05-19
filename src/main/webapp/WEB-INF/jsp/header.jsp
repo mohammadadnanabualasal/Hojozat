@@ -80,8 +80,8 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-4">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
         <ul class="nav">
             <li class="nav-item" style="width: 100%">
                 <div class="input-group">
@@ -94,7 +94,7 @@
             </li>
         </ul>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-3"></div>
 </div>
 <script>
     function doSearch() {
