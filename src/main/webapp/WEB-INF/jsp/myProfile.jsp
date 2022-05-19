@@ -14,9 +14,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                 </div>
-                <div class="col-md-4 container">
+                <div class="col-md-6 container">
                     <div class="row">
                         <div class="text-center image-center"><img src="/profileImage/${user.userId}" width="200" height="200" class="rounded-circle"> </div>
                     </div>
@@ -27,7 +27,7 @@
                         <span style="display: block;"><a style="color: red" href="/removeMyAccount">Remove My Account</a></span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                 </div>
             </div>
         </div>

@@ -9,9 +9,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <form role="form" action="/doLogin">
                         <div class="form-group">
 
@@ -35,7 +35,7 @@
                     <br/>
                     <h6><a href="/restaurantLogin">Restaurant Login</a></h6>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                 </div>
             </div>
         </div>

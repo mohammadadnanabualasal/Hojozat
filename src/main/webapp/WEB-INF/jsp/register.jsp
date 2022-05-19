@@ -9,9 +9,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                 </div>
-                <div class="col-md-4 login-continer">
+                <div class="col-md-6 login-continer">
                     <form role="form" class="login-form" action="/doRegister" method="post" enctype="multipart/form-data">
                         <div class="form-group">
 
@@ -62,7 +62,7 @@
                         </button>
                     </form>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                 </div>
             </div>
         </div>

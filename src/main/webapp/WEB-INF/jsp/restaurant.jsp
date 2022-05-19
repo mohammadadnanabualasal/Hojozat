@@ -25,9 +25,9 @@
 <c:import url="header.jsp"/>
 <div class="col-md-12 restaurantPage">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="row"><h3>${restaurant.name}</h3></div>
             <div class="row">
                 <img class="restaurantImg img-full" src="/restaurantImage/${restaurant.id}"/>
@@ -85,7 +85,7 @@
                 </form>
             </div>
             <div class="row tabcontent" id="about" style="display: none;">
-                <p>${myRestaurant.about}</p>
+                <p>${restaurant.about}</p>
                 <p>
                     Location: ${restaurant.location}<br/>
                     Serving hours: ${restaurant.getServingFromTime()} To ${restaurant.getServingToTime()}<br/>
@@ -94,7 +94,7 @@
                 </p>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
         </div>
     </div>
 </div>
