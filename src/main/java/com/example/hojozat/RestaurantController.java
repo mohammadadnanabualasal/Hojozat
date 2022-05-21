@@ -53,6 +53,7 @@ public class RestaurantController {
             ModelAndView modelAndView = new ModelAndView("myRestaurant");
             try {
                 if (fromTime > toTime) {
+                    modelAndView.setViewName("redirect:/myRestaurant");
                     return modelAndView;
                 }
                 restaurant.setServingFromTime(Time.valueOf(fromTime + ":00:00"));

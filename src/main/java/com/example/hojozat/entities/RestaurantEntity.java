@@ -384,6 +384,9 @@ public class RestaurantEntity {
         LocalTime start = getServingFromTime().toLocalTime().plusHours(getServingFromTime().toLocalTime().getMinute() ==0
                 || getServingFromTime().toLocalTime().getHour() >= getServingToTime().toLocalTime().getHour()?0:1).truncatedTo(ChronoUnit.HOURS);
         LocalTime end = getServingToTime().toLocalTime().minusHours(0).truncatedTo(ChronoUnit.HOURS);
+        if (start.isBefore(new Time(System.currentTimeMillis()).toLocalTime())){
+            start = new Time(System.currentTimeMillis()).toLocalTime();
+        }
         if (end.getHour() <= start.getHour()){
             return new int[0];
         }
