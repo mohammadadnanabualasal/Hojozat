@@ -62,16 +62,23 @@
                         <label for="fromTime">
                             Time
                         </label>
-                        <select name="fromTime" id="fromTime" class="form-select form-select-lg mb-3"
-                                aria-label="select the time">
-                            <c:set var="servingToTime" value="${restaurant.servingToTime}"/>
-                            <c:if test="${restaurant.servingToTime eq '00:00:00'}">
-                                <c:set var="servingToTime" value="24:00:00"/>
-                            </c:if>
-                            <c:forEach items="${servingHoursList}" var="hour">
-                                <option selected>${hour}:00 to ${hour +1}:00</option>
-                            </c:forEach>
-                        </select>
+                        <c:choose>
+                            <c:when test="${fn:length(servingHoursList) gt 0}">
+                                <select name="fromTime" id="fromTime" class="form-select form-select-lg mb-3"
+                                        aria-label="select the time">
+                                    <c:set var="servingToTime" value="${restaurant.servingToTime}"/>
+                                    <c:if test="${restaurant.servingToTime eq '00:00:00'}">
+                                        <c:set var="servingToTime" value="24:00:00"/>
+                                    </c:if>
+                                    <c:forEach items="${servingHoursList}" var="hour">
+                                        <option selected>${hour}:00 to ${hour +1}:00</option>
+                                    </c:forEach>
+                                </select>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="warning">you can't reserve now.</p>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <p class="error-message">${timeError}</p>
                     <input name="restaurantId" type="number" value="${restaurant.id}" hidden>
