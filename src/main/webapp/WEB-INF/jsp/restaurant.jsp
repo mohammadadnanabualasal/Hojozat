@@ -87,7 +87,11 @@
                         <input type="number" min="1" max="10" id="numberOfPersons" name="numberOfPersons" value="1" required>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Reserve</button>
+                        <c:set var="isDisabled">
+                            <c:if test="${fn:length(servingHoursList) lt 1}">disabled
+                            </c:if>
+                        </c:set>
+                        <button type="submit" class="btn btn-primary" ${isDisabled}>Reserve</button>
                     </div>
                 </form>
             </div>
