@@ -19,8 +19,11 @@
                         <div class="col-md-6 left-alignment"><h5>${user.firstName} ${user.lastName}</h5></div>
                         <div class="col-md-6 right-alignment"><a href="/removeUser/${user.userId}">Remove the user</a></div>
                     </div>
+                    <c:url value="/removeAdministrationRole" var="url">
+                        <c:param name="email" value="${user.email}"/>
+                    </c:url>
                     <div class="row">
-                        <div class="col-md-12 right-alignment"><a href="/removeUser/${user.userId}">Remove Administration Role</a></div>
+                        <div class="col-md-12 right-alignment"><a href="${url}">Remove Administration Role</a></div>
                     </div>
                 </div>
                 <div class="user-card-info">

@@ -284,12 +284,12 @@ public class AdminController {
             try {
                 Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '" + email + "';", UserEntity.class);
                 UserEntity userEntity = (UserEntity) query.getResultList().get(0);
-                userEntity.addNewUser(userEntity, true);
                 if (removeOrAddRole.equals("R")) {
                     userEntity.setIsAdmin("NO");
                 } else if (removeOrAddRole.equals("A")) {
                     userEntity.setIsAdmin("YES");
                 }
+                userEntity.addNewUser(userEntity, true);
             } catch (Exception exception) {
                 exception.printStackTrace();
             } finally {
