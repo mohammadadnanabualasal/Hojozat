@@ -14,23 +14,27 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView LoginPage(HttpSession session)
+    public ModelAndView LoginPage(HttpSession session,@RequestParam(value = "formError", defaultValue = "") String formError)
     {
         if(session.getAttribute("user") != null)
         {
             return new ModelAndView("redirect:/home");
         }
-        return  new ModelAndView("login");
+        ModelAndView modelAndView = new ModelAndView("login");
+        modelAndView.addObject("formError", formError);
+        return  modelAndView;
     }
 
     @RequestMapping(value = "/restaurantLogin", method = RequestMethod.GET)
-    public ModelAndView restaurantLoginPage(HttpSession session)
+    public ModelAndView restaurantLoginPage(HttpSession session, @RequestParam(value = "formError", defaultValue = "") String formError)
     {
         if(session.getAttribute("user") != null || session.getAttribute("restaurantUser") != null)
         {
             return new ModelAndView("redirect:/home");
         }
-        return  new ModelAndView("restaurantLogin");
+        ModelAndView modelAndView = new ModelAndView("restaurantLogin");
+        modelAndView.addObject("formError", formError);
+        return  modelAndView;
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -53,7 +57,7 @@ public class LoginController {
                 session.setAttribute("user", UserEntity.getUserByEmail(email));
                 return new ModelAndView("redirect:/home");
             }else {
-                return new ModelAndView("redirect:/login");
+                return new ModelAndView("redirect:/login?formError=either the email is not exist or the password is incorrect.");
             }
         }
     }
@@ -70,7 +74,7 @@ public class LoginController {
                 session.setAttribute("restaurantUser", RestaurantEntity.getRestaurantByEmail(email));
                 return new ModelAndView("redirect:/myRestaurant");
             }else {
-                return new ModelAndView("redirect:/restaurantLogin");
+                return new ModelAndView("redirect:/restaurantLogin?formError=either the email is not exist or the password is incorrect.");
             }
         }
     }

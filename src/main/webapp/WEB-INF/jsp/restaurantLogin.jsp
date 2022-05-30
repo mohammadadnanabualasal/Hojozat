@@ -13,8 +13,10 @@
                 </div>
                 <div class="col-md-6">
                     <form role="form" action="/doRestaurantLogin">
+                        <c:if test="${not(formError eq '')}">
+                            <p class="warning">${formError}</p>
+                        </c:if>
                         <div class="form-group">
-
                             <label for="exampleInputEmail1">
                                 Email address
                             </label>

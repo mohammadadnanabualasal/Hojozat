@@ -25,13 +25,15 @@ import java.util.Collection;
 public class RegisterController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public ModelAndView LoginPage(HttpSession session)
+    public ModelAndView LoginPage(HttpSession session, @RequestParam(value = "formError", defaultValue = "") String formError)
     {
         if(session.getAttribute("user") != null)
         {
             return new ModelAndView("redirect:/home");
         }
-        return  new ModelAndView("register");
+        ModelAndView modelAndView = new ModelAndView("register");
+        modelAndView.addObject("formError", formError);
+        return  modelAndView;
     }
 
     @RequestMapping(value = "/doRegister",method = RequestMethod.POST)
@@ -45,6 +47,9 @@ public class RegisterController {
 
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
+        if (UserEntity.getUserByEmail(email) != null){
+            return new ModelAndView("redirect:/register?formError=the email is already used for another account.");
+        }
         int users =0;
         try {
             Query query = entityManager.createNativeQuery("SELECT * FROM user WHERE email = '" + email + "';");
@@ -68,7 +73,7 @@ public class RegisterController {
         }
         else {
             if (!confirmPassword.equals(password)){
-                return new ModelAndView("redirect:/register");
+                return new ModelAndView("redirect:/register?formError=the confirm password and the password are not matched.");
             }
             boolean isSaved = false;
 
@@ -77,9 +82,7 @@ public class RegisterController {
                     isSaved = userEntity.addNewUser(userEntity, false);
                 }
             }catch (Exception e){
-                ModelAndView modelAndView = new ModelAndView("create");
-                modelAndView.addObject("user", userEntity);
-                return modelAndView;
+                return new ModelAndView("redirect:/register?formError=some of the information you have entered are not correct, please try again.");
             }
             if(isSaved)
             {
@@ -92,9 +95,7 @@ public class RegisterController {
                 session.setAttribute("user",userEntity);
                 return new ModelAndView("redirect:/home");
             }else {
-                ModelAndView modelAndView = new ModelAndView("register");
-                modelAndView.addObject("user", userEntity);
-                return modelAndView;
+                return new ModelAndView("redirect:/register?formError=some of the information you have entered are not correct, please try again.");
             }
 
         }

@@ -13,6 +13,9 @@
                 </div>
                 <div class="col-md-6 login-continer">
                     <form role="form" class="login-form" action="/doRegister" method="post" enctype="multipart/form-data">
+                        <c:if test="${not(formError eq '')}">
+                            <p class="warning">${formError}</p>
+                        </c:if>
                         <div class="form-group">
 
                             <label for="firstName">

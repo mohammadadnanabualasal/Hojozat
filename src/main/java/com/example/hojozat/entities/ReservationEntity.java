@@ -1,12 +1,7 @@
 package com.example.hojozat.entities;
 
-import org.springframework.scheduling.annotation.Scheduled;
-
 import javax.persistence.*;
-import javax.print.DocFlavor;
 import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -195,7 +190,7 @@ public class ReservationEntity {
     }
 
     public List<OrderEntity> getAllOrders() {
-        List<OrderEntity> orderEntities = new ArrayList<>();
+        List<OrderEntity> orderEntities;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
