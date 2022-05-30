@@ -23,7 +23,7 @@ public class RestaurantController {
     public ModelAndView restaurantPage(HttpSession session, @PathVariable("restaurantId") String id, @RequestParam(value = "timeError", defaultValue = "") String timeError) {
         RestaurantEntity restaurant = RestaurantEntity.getRestaurantById(id);
         ModelAndView modelAndView = new ModelAndView("restaurant");
-        modelAndView.addObject("dishesList", restaurant.getAllDishesForRestaurant());
+        modelAndView.addObject("dishesList", restaurant.getAllDishes());
         modelAndView.addObject("servingHoursList", restaurant.getServingHours());
         modelAndView.addObject("timeError", timeError);
         session.setAttribute("requestedRestaurant", restaurant);
@@ -35,7 +35,7 @@ public class RestaurantController {
         if (session.getAttribute("restaurantUser") != null) {
             RestaurantEntity restaurant = (RestaurantEntity) session.getAttribute("restaurantUser");
             ModelAndView modelAndView = new ModelAndView("myRestaurant");
-            modelAndView.addObject("dishesList", restaurant.getAllDishesForRestaurant());
+            modelAndView.addObject("dishesList", restaurant.getAllDishes());
             modelAndView.addObject("myRestaurant", restaurant);
             return modelAndView;
         }

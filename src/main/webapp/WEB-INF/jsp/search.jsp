@@ -40,7 +40,7 @@
                     <ul class="pagination">
                         <c:forEach var="number" begin="1" end="${pages}">
                             <li class="page-item">
-                                <a class="page-link" href="/search?pageNumber=${number}">${number}</a>
+                                <a class="page-link" href="/search?pageNumber=${number}&term=${term}">${number}</a>
                             </li>
                         </c:forEach>
                     </ul>

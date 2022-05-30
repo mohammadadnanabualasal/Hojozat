@@ -282,34 +282,17 @@ public class RestaurantEntity {
 
     }
 
-    public static List<DishesEntity> getAllDishes() {
+    public List<DishesEntity> getAllDishes() {
         List<DishesEntity> dishesEntities = new ArrayList<>();
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            Query query = entityManager.createNativeQuery("SELECT * FROM dishes;", DishesEntity.class);
+            Query query = entityManager.createNativeQuery("SELECT * FROM dishes where restaurantId="+getId()+";", DishesEntity.class);
             dishesEntities = query.getResultList();
         }catch (Exception exception){
             exception.printStackTrace();
             return null;
         }finally {
-            entityManager.close();
-            entityManagerFactory.close();
-        }
-        return dishesEntities;
-    }
-
-    public List<DishesEntity> getAllDishesForRestaurant() {
-        List<DishesEntity> dishesEntities = new ArrayList<>();
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        try {
-            Query query = entityManager.createNativeQuery("SELECT * FROM dishes where restaurantId=" + getId() + ";", DishesEntity.class);
-            dishesEntities = query.getResultList();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return null;
-        } finally {
             entityManager.close();
             entityManagerFactory.close();
         }
@@ -334,7 +317,7 @@ public class RestaurantEntity {
 
     public List<ReservationEntity> getReservations()
     {
-        List<ReservationEntity> reservation = null;
+        List<ReservationEntity> reservation;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
@@ -353,7 +336,7 @@ public class RestaurantEntity {
 
     public List<ReservationEntity> getReservationsForTime(String time)
     {
-        List<ReservationEntity> reservation = null;
+        List<ReservationEntity> reservation;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
