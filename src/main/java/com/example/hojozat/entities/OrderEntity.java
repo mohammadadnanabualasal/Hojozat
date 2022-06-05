@@ -95,7 +95,7 @@ public class OrderEntity {
 
     public static OrderEntity getByDishAndReservationID(int dishId, int reservationId)
     {
-        OrderEntity orderEntity = null;
+        OrderEntity orderEntity;
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("hojozat");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {

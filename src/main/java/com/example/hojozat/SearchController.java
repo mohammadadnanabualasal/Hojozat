@@ -13,7 +13,7 @@ import java.util.List;
 @Controller
 public class SearchController {
 
-    @RequestMapping(value = "search", method = RequestMethod.GET)
+    @RequestMapping(value = "/search")
     public ModelAndView searchPage(@RequestParam(value = "pageNumber", required = false, defaultValue = "1") int pageNumber
             ,@RequestParam(value = "term", required = false, defaultValue = "") String searchTerm ) {
         List<RestaurantEntity> restaurantEntities = RestaurantEntity.getAllRestaurants(searchTerm);

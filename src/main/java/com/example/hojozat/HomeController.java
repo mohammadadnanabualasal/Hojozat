@@ -9,11 +9,10 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-public class HomeController {
+public class HomeController{
 
-    @RequestMapping(value = {"home","/"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/home","/"}, method = RequestMethod.GET)
     public ModelAndView homePage() {
-
         List<RestaurantEntity> restaurantEntities = RestaurantEntity.getAllRestaurants("");
         ModelAndView modelAndView = new ModelAndView("home");
         modelAndView.addObject("restaurants", restaurantEntities);
